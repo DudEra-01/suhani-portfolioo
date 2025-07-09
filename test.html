@@ -1,0 +1,515 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Instagram, Youtube, Mail, Send } from 'lucide-react'; // Using lucide-react for icons
+
+// Main App Component
+function App() {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isHoveringLink, setIsHoveringLink] = useState(false);
+  const sectionsRef = useRef({});
+
+  // Define image paths from uploaded files
+  const profileImage = "513860393_18033059300675453_2404119790988362773_n.jpg";
+  const galleryImages = [
+    "505467558_18031690979675453_8002554224527934848_n.jpg",
+    "506057561_18032006858675453_8999117665301318166_n.jpg",
+    "509233705_18032110403675453_5628167227765850698_n.jpg",
+  ];
+
+
+  // Effect to update mouse position for custom cursor
+  useEffect(() => {
+    const handleMouseMove = (event) => {
+      setMousePos({ x: event.clientX, y: event.clientY });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+
+  // Function to handle smooth scrolling
+  const scrollToSection = (id) => {
+    if (sectionsRef.current[id]) {
+      sectionsRef.current[id].scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  // Variants for section animations
+  const sectionVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' } },
+  };
+
+  // Variants for text animations
+  const textVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+  };
+
+  // Variants for button/icon animations
+  const itemVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: 'easeOut' } },
+  };
+
+  return (
+    <div className="relative min-h-screen bg-gray-900 text-white font-inter overflow-x-hidden">
+      {/* Custom Mouse Cursor */}
+      <div
+        className="fixed inset-0 pointer-events-none z-50 transition-transform duration-100 ease-out"
+        style={{
+          transform: `translate(${mousePos.x}px, ${mousePos.y}px)`,
+        }}
+      >
+        <motion.div
+          className="w-8 h-8 bg-pink-500 rounded-full mix-blend-difference blur-md opacity-70"
+          animate={{
+            scale: isHoveringLink ? 2 : 1,
+            opacity: isHoveringLink ? 0.9 : 0.7,
+          }}
+          transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+        />
+      </div>
+
+      {/* Navigation Bar */}
+      <nav className="fixed top-0 left-0 right-0 z-40 bg-gray-900 bg-opacity-90 backdrop-blur-sm p-4 shadow-lg">
+        <div className="container mx-auto flex justify-between items-center">
+          <motion.h1
+            className="text-2xl font-bold text-pink-400"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            Honey Girl
+          </motion.h1>
+          <ul className="flex space-x-6">
+            {['Hero', 'About', 'Featured', 'Skills', 'Social', 'Gallery', 'Contact'].map((section) => (
+              <motion.li
+                key={section}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.1 * (['Hero', 'About', 'Featured', 'Skills', 'Social', 'Gallery', 'Contact'].indexOf(section)) }}
+              >
+                <button
+                  onClick={() => scrollToSection(section.toLowerCase())}
+                  onMouseEnter={() => setIsHoveringLink(true)}
+                  onMouseLeave={() => setIsHoveringLink(false)}
+                  className="text-white hover:text-pink-400 transition-colors duration-300 px-3 py-2 rounded-md"
+                >
+                  {section}
+                </button>
+              </motion.li>
+            ))}
+          </ul>
+        </div>
+      </nav>
+
+      {/* Main Content */}
+      <main className="pt-20">
+        {/* Hero Section */}
+        <section
+          id="hero"
+          ref={(el) => (sectionsRef.current.hero = el)}
+          className="relative flex flex-col md:flex-row items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 p-8 text-center md:text-left"
+        >
+          <div className="absolute inset-0 z-0 opacity-10" style={{ backgroundImage: 'url(https://placehold.co/1920x1080/111827/FF69B4?text=Background)', backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
+          <div className="relative z-10 flex flex-col md:flex-row items-center justify-center md:space-x-12">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, type: 'spring', stiffness: 100 }}
+              className="mb-8 md:mb-0"
+            >
+              <img
+                src={profileImage}
+                alt="Suhani Bisht Profile"
+                className="rounded-full w-64 h-64 object-cover border-4 border-pink-500 shadow-lg"
+              />
+            </motion.div>
+            <div className="max-w-2xl">
+              <motion.h2
+                className="text-5xl md:text-6xl font-extrabold text-white mb-4 leading-tight"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.7 }}
+              >
+                Suhani Bisht
+              </motion.h2>
+              <motion.p
+                className="text-3xl md:text-4xl font-light text-pink-300 mb-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7, duration: 0.7 }}
+              >
+                "Speaking Truth, Sharing Life"
+              </motion.p>
+              <motion.div
+                className="flex justify-center md:justify-start space-x-6 mt-8"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.9, duration: 0.7 }}
+              >
+                <motion.a
+                  href="https://instagram.com/_honeygirl_05"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-4 bg-pink-600 rounded-full shadow-lg hover:bg-pink-700 transition-all duration-300 transform hover:scale-110"
+                  onMouseEnter={() => setIsHoveringLink(true)}
+                  onMouseLeave={() => setIsHoveringLink(false)}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <Instagram size={32} className="text-white" />
+                </motion.a>
+                <motion.a
+                  href="https://youtube.com/@Honeygirl_001"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-4 bg-pink-600 rounded-full shadow-lg hover:bg-pink-700 transition-all duration-300 transform hover:scale-110"
+                  onMouseEnter={() => setIsHoveringLink(true)}
+                  onMouseLeave={() => setIsHoveringLink(false)}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <Youtube size={32} className="text-white" />
+                </motion.a>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+        {/* About Me Section */}
+        <section
+          id="about"
+          ref={(el) => (sectionsRef.current.about = el)}
+          className="py-20 px-8 bg-gray-800 text-center"
+        >
+          <motion.div
+            className="container mx-auto max-w-4xl"
+            variants={sectionVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+          >
+            <motion.h2
+              className="text-4xl font-bold text-pink-400 mb-8"
+              variants={textVariants}
+            >
+              About Me
+            </motion.h2>
+            <motion.p
+              className="text-lg leading-relaxed text-gray-300 mb-4"
+              variants={textVariants}
+            >
+              Known as "Honey Girl," Suhani Bisht is a dynamic influencer and aspiring journalist currently pursuing her BJMC at Graphic Era University. She is celebrated for her fearless street reporting, confident social voice, and captivating lifestyle and fashion content across Instagram and YouTube.
+            </motion.p>
+            <motion.p
+              className="text-lg leading-relaxed text-gray-300"
+              variants={textVariants}
+            >
+              Suhani's passion lies in speaking truth to power and advocating for social change. Her work is characterized by a unique blend of confidence, creativity, and a strong commitment to activism, making her a compelling voice in the digital landscape.
+            </motion.p>
+          </motion.div>
+        </section>
+
+        {/* Featured Story Section */}
+        <section
+          id="featured"
+          ref={(el) => (sectionsRef.current.featured = el)}
+          className="py-20 px-8 bg-gray-900 text-center"
+        >
+          <motion.div
+            className="container mx-auto max-w-4xl"
+            variants={sectionVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+          >
+            <motion.h2
+              className="text-4xl font-bold text-pink-400 mb-12"
+              variants={textVariants}
+            >
+              Featured Story: Impactful Reporting
+            </motion.h2>
+            <motion.div
+              className="bg-gray-800 rounded-xl shadow-xl overflow-hidden md:flex md:items-center p-6 md:p-8"
+              variants={itemVariants}
+            >
+              <div className="md:flex-shrink-0 mb-6 md:mb-0 md:mr-8">
+                <img
+                  src="https://placehold.co/400x225/FF69B4/FFFFFF?text=Viral+Video" // Placeholder for video thumbnail
+                  alt="Viral Video Thumbnail"
+                  className="w-full md:w-64 h-auto rounded-lg shadow-md"
+                />
+              </div>
+              <div className="text-left">
+                <motion.h3
+                  className="text-3xl font-semibold text-white mb-4"
+                  variants={textVariants}
+                >
+                  Village Road Rebuilt After Viral Report
+                </motion.h3>
+                <motion.p
+                  className="text-gray-300 mb-6 leading-relaxed"
+                  variants={textVariants}
+                >
+                  One of Suhani's most impactful pieces of journalism went viral when her persistent reporting on the dilapidated roads in her village led directly to their complete reconstruction. This story exemplifies her dedication to bringing about tangible change through her voice.
+                </motion.p>
+                <motion.a
+                  href="https://www.youtube.com/watch?v=ji8_PIhQsZg"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center px-6 py-3 bg-pink-600 text-white font-semibold rounded-lg shadow-md hover:bg-pink-700 transition-all duration-300 transform hover:scale-105"
+                  onMouseEnter={() => setIsHoveringLink(true)}
+                  onMouseLeave={() => setIsHoveringLink(false)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Youtube size={20} className="mr-2" /> Watch the Story
+                </motion.a>
+              </div>
+            </motion.div>
+          </motion.div>
+        </section>
+
+        {/* Skills Section */}
+        <section
+          id="skills"
+          ref={(el) => (sectionsRef.current.skills = el)}
+          className="py-20 px-8 bg-gray-800 text-center"
+        >
+          <motion.div
+            className="container mx-auto max-w-4xl"
+            variants={sectionVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+          >
+            <motion.h2
+              className="text-4xl font-bold text-pink-400 mb-12"
+              variants={textVariants}
+            >
+              My Skills
+            </motion.h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[
+                'Reporting',
+                'Content Creation',
+                'Public Speaking',
+                'Social Awareness',
+                'Storytelling',
+                'Digital Influence',
+              ].map((skill, index) => (
+                <motion.div
+                  key={skill}
+                  className="p-6 bg-gray-700 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
+                  variants={itemVariants}
+                  custom={index}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.5 }}
+                >
+                  <h3 className="text-2xl font-semibold text-white mb-2">{skill}</h3>
+                  <p className="text-gray-300">
+                    {/* Short description for each skill, or keep it concise */}
+                    {skill === 'Reporting' && 'Investigative and on-the-ground journalism.'}
+                    {skill === 'Content Creation' && 'Engaging and viral content for digital platforms.'}
+                    {skill === 'Public Speaking' && 'Confident and articulate communication.'}
+                    {skill === 'Social Awareness' && 'Advocating for important social causes.'}
+                    {skill === 'Storytelling' && 'Crafting compelling narratives.'}
+                    {skill === 'Digital Influence' && 'Building and engaging online communities.'}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </section>
+
+        {/* Social Media Highlights Section */}
+        <section
+          id="social"
+          ref={(el) => (sectionsRef.current.social = el)}
+          className="py-20 px-8 bg-gray-900 text-center"
+        >
+          <motion.div
+            className="container mx-auto max-w-4xl"
+            variants={sectionVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+          >
+            <motion.h2
+              className="text-4xl font-bold text-pink-400 mb-12"
+              variants={textVariants}
+            >
+              Social Media Highlights
+            </motion.h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+              <motion.div
+                className="bg-gray-800 rounded-xl shadow-xl p-6"
+                variants={itemVariants}
+              >
+                <h3 className="text-2xl font-semibold text-white mb-4">Latest YouTube Video</h3>
+                <div className="relative w-full pb-[56.25%] rounded-lg overflow-hidden shadow-lg"> {/* 16:9 Aspect Ratio */}
+                  <iframe
+                    className="absolute top-0 left-0 w-full h-full"
+                    src="https://www.youtube.com/embed/ji8_PIhQsZg" // Example video embed
+                    title="YouTube video player"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+                <p className="text-gray-300 mt-4">Check out my latest insights and stories on YouTube!</p>
+                <motion.a
+                  href="https://youtube.com/@Honeygirl_001"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center mt-6 px-6 py-3 bg-pink-600 text-white font-semibold rounded-lg shadow-md hover:bg-pink-700 transition-all duration-300 transform hover:scale-105"
+                  onMouseEnter={() => setIsHoveringLink(true)}
+                  onMouseLeave={() => setIsHoveringLink(false)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Youtube size={20} className="mr-2" /> Visit YouTube
+                </motion.a>
+              </motion.div>
+
+              <motion.div
+                className="bg-gray-800 rounded-xl shadow-xl p-6"
+                variants={itemVariants}
+              >
+                <h3 className="text-2xl font-semibold text-white mb-4">Instagram Profile</h3>
+                <div className="flex justify-center items-center h-48 bg-gray-700 rounded-lg shadow-inner">
+                  {/* Instagram embed is complex without specific APIs, so linking directly */}
+                  <Instagram size={64} className="text-pink-400 opacity-70" />
+                </div>
+                <p className="text-gray-300 mt-4">Follow my daily life, fashion, and more on Instagram!</p>
+                <motion.a
+                  href="https://instagram.com/_honeygirl_05"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center mt-6 px-6 py-3 bg-pink-600 text-white font-semibold rounded-lg shadow-md hover:bg-pink-700 transition-all duration-300 transform hover:scale-105"
+                  onMouseEnter={() => setIsHoveringLink(true)}
+                  onMouseLeave={() => setIsHoveringLink(false)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Instagram size={20} className="mr-2" /> Visit Instagram
+                </motion.a>
+              </motion.div>
+            </div>
+          </motion.div>
+        </section>
+
+        {/* Gallery Section */}
+        <section
+          id="gallery"
+          ref={(el) => (sectionsRef.current.gallery = el)}
+          className="py-20 px-8 bg-gray-800 text-center"
+        >
+          <motion.div
+            className="container mx-auto max-w-4xl"
+            variants={sectionVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+          >
+            <motion.h2
+              className="text-4xl font-bold text-pink-400 mb-12"
+              variants={textVariants}
+            >
+              Gallery
+            </motion.h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {galleryImages.map((image, index) => (
+                <motion.div
+                  key={index}
+                  className="relative group rounded-xl overflow-hidden shadow-lg"
+                  variants={itemVariants}
+                  custom={index}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.5 }}
+                >
+                  <img
+                    src={image}
+                    alt={`Gallery Image ${index + 1}`}
+                    className="w-full h-72 object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <p className="text-white text-lg font-semibold">Suhani's Moment</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </section>
+
+        {/* Contact Section */}
+        <section
+          id="contact"
+          ref={(el) => (sectionsRef.current.contact = el)}
+          className="py-20 px-8 bg-gray-900 text-center"
+        >
+          <motion.div
+            className="container mx-auto max-w-2xl"
+            variants={sectionVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+          >
+            <motion.h2
+              className="text-4xl font-bold text-pink-400 mb-12"
+              variants={textVariants}
+            >
+              Get in Touch
+            </motion.h2>
+
+            {/* Social Buttons */}
+            <motion.div
+              className="flex justify-center space-x-6 mb-12"
+              variants={itemVariants}
+            >
+              <motion.a
+                href="https://instagram.com/_honeygirl_05"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-4 bg-pink-600 rounded-full shadow-lg hover:bg-pink-700 transition-all duration-300 transform hover:scale-110"
+                onMouseEnter={() => setIsHoveringLink(true)}
+                onMouseLeave={() => setIsHoveringLink(false)}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Instagram size={32} className="text-white" />
+              </motion.a>
+              <motion.a
+                href="https://youtube.com/@Honeygirl_001"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-4 bg-pink-600 rounded-full shadow-lg hover:bg-pink-700 transition-all duration-300 transform hover:scale-110"
+                onMouseEnter={() => setIsHoveringLink(true)}
+                onMouseLeave={() => setIsHoveringLink(false)}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Youtube size={32} className="text-white" />
+              </motion.a>
+            </motion.div>
+          </motion.div>
+        </section>
+
+        {/* Footer */}
+        <footer className="py-8 bg-gray-900 text-center text-gray-400">
+          <p>&copy; {new Date().getFullYear()} Suhani Bisht. All rights reserved.</p>
+          <p className="mt-2">Designed with ❤️ by Honey Girl</p>
+        </footer>
+      </main>
+    </div>
+  );
+}
+
+export default App;
