@@ -344,3 +344,34 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style); 
+
+// About Gallery Scroll-in Animation
+function randomizeScatteredImages() {
+  document.querySelectorAll('.about-gallery-img').forEach((img, i) => {
+    // Randomize margin-top for scattered effect
+    img.style.setProperty('--random', (Math.random() * 2 - 1).toFixed(2));
+  });
+}
+
+function aboutGalleryScrollIn() {
+  const images = document.querySelectorAll('.about-gallery-img');
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    images.forEach(img => observer.observe(img));
+  } else {
+    // Fallback: show all
+    images.forEach(img => img.classList.add('visible'));
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  randomizeScatteredImages();
+  aboutGalleryScrollIn();
+}); 
