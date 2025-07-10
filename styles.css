@@ -984,3 +984,63 @@ section.fullscreen-section {
         background-position: center top;
     }
 } 
+
+/* Section background overlays for readability */
+.fullscreen-section[style*='background-image']::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.35); /* semi-transparent overlay */
+  z-index: 0;
+}
+.fullscreen-section[style*='background-image'] {
+  position: relative;
+  overflow: hidden;
+}
+.fullscreen-section > .container {
+  position: relative;
+  z-index: 1;
+}
+
+/* About photo styling */
+.about-photo {
+  width: 220px;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 50%;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  border: 5px solid #fff;
+  background: #fff;
+  margin: 0 auto;
+  display: block;
+}
+
+/* Responsive section backgrounds */
+@media (max-width: 900px) {
+  .about-photo {
+    width: 150px;
+    height: 150px;
+  }
+}
+
+/* Ensure text is readable on backgrounds */
+.section-title, .about-content, .content-tabs, .content-card, .skills-grid, .contact-content, .footer-content {
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+}
+
+/* Add a subtle border and background to cards for contrast */
+.content-card, .skill-card, .contact-method, .contact-form {
+  background: rgba(255,255,255,0.85);
+  color: #222;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  padding: 1.2em;
+  margin-bottom: 1.2em;
+}
+
+/* Make sure overlays do not cover fixed nav/footer */
+.navbar, .footer {
+  position: relative;
+  z-index: 10;
+} 
