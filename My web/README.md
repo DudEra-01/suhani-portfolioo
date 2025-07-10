@@ -169,4 +169,4 @@ This project is created for Suhani Bisht's personal portfolio. All rights reserv
 
 ---
 
-**Built with ❤️ for showcasing the amazing work of Suhani Bisht (Honey Girl)**
+**Built with ❤️ for showcasing the amazing work of Suhani Bisht (Honey Girl)** 
